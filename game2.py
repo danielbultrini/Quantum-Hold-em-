@@ -20,8 +20,8 @@ while start:
 	image = 'circuit.png'
 	values=['Listbox 1', 'Listbox 2', 'Listbox 3']
 	layout = [[ sg.Image(image, key='_CHANGE_') ],
-		   [sg.Image('circuit.png', key='_GRAPH_'), sg.Input(key='_IN_',size=(5,1)), sg.Button('Play')],
-			 [sg.Combo(values, key='GATES')],[sg.Button('Exit')]]
+		   [sg.Image('Foto.png', key='_GRAPH_'), sg.Input(key='_IN_',size=(5,1)), sg.Button('Play')],
+			 [sg.Button('Player1')],[sg.Button('Player2')],[sg.Button('Exit')]]
 	window = sg.Window('QuantumPokerGame', layout)
 	while True:  # Event Loop
 	   event, values = window.Read()
@@ -31,8 +31,13 @@ while start:
 		   break
 	   if event == 'Play':
 		   # Update the "output" element to be the value of "input" element
-		   values=['Listbox 1', 'Listbox 2']
-		   window.Element('_CHANGE_').Update('circuit.png')
-		   window.Element('GATES').Update('values')
+		   window.Element('_CHANGE_').Update('geek.jpg')
+	   if event == 'Player1':
+		   # Update the "output" element to be the value of "input" element
+		   window.Element('_CHANGE_').Update('geek.jpg')
+	   if event == 'Player2':
+		   # Update the "output" element to be the value of "input" element
+		   window.Element('_CHANGE_').Update('geek.jpg')
+		
 		
 window.Close()
