@@ -124,7 +124,7 @@ def score_counts(state_v):
 
 def state_draw(state):
     dict = {}
-    tmp = int(math.log(len(state),2)+0.44)
+    tmp = int(math.log(len(state),2))
     for i in range(len(state)):
         dict[str(bin(i)[2:].zfill(tmp))] = state[i]
     plot_histogram(dict).savefig("state_prb.png")
