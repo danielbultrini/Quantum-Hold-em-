@@ -7,5 +7,5 @@
 
 ![picture](./circuit_example.png)
 
-- When the last empty layer is filled, the game finishes and the final state is measured.
-- Player 0 wins if 0's are represented in the measured state with higher probability than 50%, player 1 wins if 1's occur with probability higher than 50%.
+- When the last empty layer is filled, the game finishes and the final state is calculated.
+- Player 0 wins if 0's are represented in the final state with probability higher than 50%, and vice versa for player 1.
