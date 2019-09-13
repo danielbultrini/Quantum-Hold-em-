@@ -33,7 +33,7 @@ def generate_subcircuit(no_qubits):
     all_ids = True
     for q in range(no_qubits):
         gate = np.random.choice(gates_lists)
-        if gate is not 'Id':
+        if gate != 'Id':
             all_ids = False
         ctrl = 0
         if gate == 'CX':
@@ -128,7 +128,8 @@ def score_counts(state_v):
 
 def state_draw(state):
     dict = {}
+    state = list(state)
     tmp = int(math.log(len(state),2))
     for i in range(len(state)):
-        dict[str(bin(i)[2:].zfill(tmp))] = state[i]
+        dict[str(bin(i)[2:].zfill(tmp))] = 1000*np.abs(state[i])**2
     plot_histogram(dict).savefig("state_prb.png")
