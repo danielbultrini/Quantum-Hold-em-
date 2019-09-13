@@ -17,7 +17,7 @@ while not start:
 	window.Close()
 	
 while start:
-	image = 'Foto.png'
+	image = 'circuit.png'
 	values=['Listbox 1', 'Listbox 2', 'Listbox 3']
 	layout = [[ sg.Image(image, key='_CHANGE_') ],
 		   [sg.Image('Foto.png', key='_GRAPH_'), sg.Input(key='_IN_',size=(5,1)), sg.Button('Play')],
