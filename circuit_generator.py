@@ -30,15 +30,19 @@ def apply_gate(circuit,gate_str,applied,ctrl=0):
 def generate_subcircuit(no_qubits):
     gates_lists = ['H', 'HZ', 'X', 'Z', 'CX'] + 3*['Id']
     circuit = QuantumCircuit(no_qubits)
+    all_ids = True
     for q in range(no_qubits):
         gate = np.random.choice(gates_lists)
+        if gate is not 'Id':
+            all_ids = False
         ctrl = 0
         if gate == 'CX':
             list_qubits = list(range(no_qubits))
             list_qubits.pop(q)
             ctrl = np.random.choice(list_qubits)
         apply_gate(circuit, gate, q, ctrl)
-    circuit.barrier()
+    if not all_ids:
+        circuit.barrier()
     return circuit
 
 #------------------------------------------------------------------------------
