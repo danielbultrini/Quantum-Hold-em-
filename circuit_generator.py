@@ -4,6 +4,7 @@ from qiskit.visualization import plot_histogram
 from qiskit.tools.visualization import circuit_drawer
 from qiskit.circuit import Gate
 from collections import Counter
+import math
 
 
 
@@ -20,12 +21,14 @@ def apply_gate(circuit,gate_str,applied,ctrl=0):
     elif gate_str == 'CX':
         circuit.cx(ctrl,applied)
     elif gate_str == 'I':
+        circuit.iden(applied)
+    elif gate_str == 'Id':
         pass
     return circuit
 
 
 def generate_subcircuit(no_qubits):
-    gates_lists = ['H', 'HZ', 'X', 'Z', 'CX'] + 3*['I']
+    gates_lists = ['H', 'HZ', 'X', 'Z', 'CX'] + 3*['Id']
     circuit = QuantumCircuit(no_qubits)
     for q in range(no_qubits):
         gate = np.random.choice(gates_lists)
@@ -70,7 +73,7 @@ def draw_game(Circuits, Plays):
                 final_circ = apply_gate(final_circ,gate_str = player,applied = qubit)
         final_circ.barrier()
         final_circ = final_circ + circ
-        final_circ.measure()
+        #final_circ.measure()
     final_circ.draw(output = 'mpl').savefig('stage.png')
 
 
@@ -104,7 +107,7 @@ def get_played_game(Circuits, Plays):
     return final_circ
 
 
-def compute_state(partial_circuit):
+def compute_state(partial_circ):
     backend = Aer.get_backend('statevector_simulator')
     job = execute(partial_circ, backend)
     result = job.result()
@@ -117,3 +120,11 @@ def score_counts(state_v):
     for i, p in enumerate(np.abs(state_v)**2):
         e_ones += p*np.sum(np.array(list(bin(i)[2:])).astype(np.int))
     return np.around(e_ones/np.log2(len(state_v))*100,decimals = 1)
+
+
+def state_draw(state):
+    dict = {}
+    tmp = int(math.log(len(state),2)+0.44)
+    for i in range(len(state)):
+        dict[str(bin(i)[2:].zfill(tmp))] = state[i]
+    plot_histogram(dict).savefig("state_prb.png")
