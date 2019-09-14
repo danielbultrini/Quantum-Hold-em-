@@ -89,7 +89,7 @@ def draw_game(Circuits, Plays, unveil = False, display_empty = False):
                 final_circ = final_circ + circ
             #final_circ.measure()
 
-    final_circ.draw(output = 'mpl').savefig('stage2.png')
+    final_circ.draw(output = 'mpl').savefig('stage.png')
 
 
 def distribute_cards(no_rounds):
