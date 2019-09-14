@@ -130,13 +130,17 @@ def draw_game(Circuits, Plays, unveil = False, display_empty = False):
     final_circ.draw(output = 'mpl').savefig('stage.png')
 
 
-def distribute_cards(no_rounds):
-    cards_list = ['H', 'HZ', 'X', 'Z', 'I']
-    deck = np.array(no_rounds*cards_list)
-    np.random.shuffle(deck)
-    hand_size = no_rounds + 1
-    hand_P0 = dict(Counter(deck[0:hand_size]))
-    hand_P1 = dict(Counter(deck[hand_size:2*hand_size]))
+def distribute_cards(no_rounds, demo = False):
+    if demo:
+        hand_P0 = {'Z':1, 'HZ': 1, 'X': 1, 'H':2}
+        hand_P1 = {'I':2, 'X': 1, 'Z': 1, 'HZ': 1}
+    else:
+        cards_list = ['H', 'HZ', 'X', 'Z', 'I']
+        deck = np.array(no_rounds*cards_list)
+        np.random.shuffle(deck)
+        hand_size = no_rounds + 1
+        hand_P0 = dict(Counter(deck[0:hand_size]))
+        hand_P1 = dict(Counter(deck[hand_size:2*hand_size]))
     return hand_P0, hand_P1
 
 
