@@ -19,3 +19,5 @@
   - numpy
   - matplotlib
   
+  
+  Presentation: https://docs.google.com/presentation/d/1lWjuPolNVO1WrVPw0jsXRKL_llOK1jNFixYHoQXWUPU/edit#slide=id.g60aaf8048b_3_1
