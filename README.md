@@ -13,9 +13,9 @@
 - There are three modes, one where everything is shown (normal), one where all the gate positions are shown, but the gates
   are hidden (hidden) and a Hold'em style mode where the board is hidden and unveiled as the game is played (Poker)
   ## Requirements
-  Pillow (PIL)
-  Qiskit
-  pysimpleGUI
-  numpy
-  matplotlib
+  -Pillow (PIL)
+  -Qiskit
+  -pysimpleGUI
+  -numpy
+  -matplotlib
   
