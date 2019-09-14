@@ -150,3 +150,21 @@ def state_draw(state):
     for i in range(len(state)):
         dict[str(bin(i)[2:].zfill(tmp))] = 1000*np.abs(state[i])**2
     plot_histogram(dict).savefig("state_prb.png")
+    
+def resize_img(title, basewidth):
+    img = Image.open(title)
+    if img.size[0] > basewidth:
+        wpercent = (basewidth/float(img.size[0]))
+        hsize = int((float(img.size[1])*float(wpercent)))
+        img = img.resize((basewidth,hsize), Image.ANTIALIAS)
+        img.save(title) 
+    else:
+        pass
+
+def resize_img_height(title, base_height):
+    img = Image.open(title)
+    if img.size[1] > base_height:
+        img = img.resize((img.size[0],base_height), Image.ANTIALIAS)
+        img.save(title) 
+    else:
+        pass
