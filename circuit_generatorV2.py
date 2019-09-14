@@ -5,7 +5,6 @@ from qiskit.tools.visualization import circuit_drawer
 from qiskit.circuit import Gate
 from collections import Counter
 import math
-from PIL import Image
 
 def apply_gate(circuit,gate_str,applied,ctrl=0):
     if gate_str == 'H':
@@ -47,21 +46,50 @@ def generate_subcircuit(no_qubits):
 #------------------------------------------------------------------------------
 #main functions
 
-def generate_game(no_qubits, no_rounds):
+def generate_game(no_qubits, no_rounds, demo = False):
     Circuits = []
     Plays = []
 
-    init_circuit = QuantumCircuit(no_qubits)
-    init_circuit.h(range(no_qubits))
-    init_circuit.barrier()
-    Circuits.append(init_circuit)
+    if demo:
+        init_circuit = QuantumCircuit(no_qubits)
+        init_circuit.h(range(no_qubits))
+        init_circuit.barrier()
+        Circuits.append(init_circuit)
+        #ROUND 0
+        circuit = QuantumCircuit(no_qubits)
+        circuit.cx(2,0)
+        Circuits.append(circuit)
+        #ROUND 1
+        circuit = QuantumCircuit(no_qubits)
+        circuit.z(1)
+        Circuits.append(circuit)
+        #ROUND 2
+        circuit = QuantumCircuit(no_qubits)
+        circuit.x(2)
+        Circuits.append(circuit)
+        #ROUND 3
+        circuit = QuantumCircuit(no_qubits)
+        circuit.cx(0,2)
+        Circuits.append(circuit)
 
-    for n in range(no_rounds):
-        qubits_play = np.random.choice(list(range(no_qubits)),2,replace = False)
-        np.random.shuffle(qubits_play)
-        play = [('P0',qubits_play[0]), ('P1',qubits_play[1])]
-        Plays.append(play)
-        Circuits.append(generate_subcircuit(no_qubits))
+        Plays = [[('P0',2),('P1',0)],
+                 [('P0',1),('P1',2)],
+                 [('P0',0),('P1',1)],
+                 [('P0',2),('P1',0)]
+                ]
+
+    else:
+        init_circuit = QuantumCircuit(no_qubits)
+        init_circuit.h(range(no_qubits))
+        init_circuit.barrier()
+        Circuits.append(init_circuit)
+
+        for n in range(no_rounds):
+            qubits_play = np.random.choice(list(range(no_qubits)),2,replace = False)
+            np.random.shuffle(qubits_play)
+            play = [('P0',qubits_play[0]), ('P1',qubits_play[1])]
+            Plays.append(play)
+            Circuits.append(generate_subcircuit(no_qubits))
 
     return Circuits, Plays
 
@@ -72,16 +100,19 @@ def draw_game(Circuits, Plays, unveil = False, display_empty = False):
         final_circ.barrier()
     else:
         final_circ = Circuits[0].copy()
-        FLAG = False
+        FLAG = 0
         for play, circ in zip(Plays, Circuits[1:]):
             for player, qubit in play:
                 if player in ['P0','P1']:
-                    FLAG = True
-                    final_circ.append(Gate(name = player, num_qubits = 1, params = []),[qubit])
+                    if FLAG <= 1:
+                        final_circ.append(Gate(name = '-> ' + player, num_qubits = 1, params = []),[qubit])
+                    else:
+                        final_circ.append(Gate(name = player, num_qubits = 1, params = []),[qubit])
+                    FLAG += 1
                 else:
                     final_circ = apply_gate(final_circ,gate_str = player,applied = qubit)
             final_circ.barrier()
-            if unveil and FLAG:
+            if unveil and FLAG > 1:
                 for q in range(circ.n_qubits):
                     final_circ.append(Gate(name = '?', num_qubits = 1, params = []),[q])
                 final_circ.barrier()
@@ -151,14 +182,14 @@ def state_draw(state):
     for i in range(len(state)):
         dict[str(bin(i)[2:].zfill(tmp))] = 1000*np.abs(state[i])**2
     plot_histogram(dict).savefig("state_prb.png")
-    
+
 def resize_img(title, basewidth):
     img = Image.open(title)
     if img.size[0] > basewidth:
         wpercent = (basewidth/float(img.size[0]))
         hsize = int((float(img.size[1])*float(wpercent)))
         img = img.resize((basewidth,hsize), Image.ANTIALIAS)
-        img.save(title) 
+        img.save(title)
     else:
         pass
 
@@ -166,6 +197,6 @@ def resize_img_height(title, base_height):
     img = Image.open(title)
     if img.size[1] > base_height:
         img = img.resize((img.size[0],base_height), Image.ANTIALIAS)
-        img.save(title) 
+        img.save(title)
     else:
         pass
