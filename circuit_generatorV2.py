@@ -58,18 +58,24 @@ def generate_game(no_qubits, no_rounds, demo = False):
         #ROUND 0
         circuit = QuantumCircuit(no_qubits)
         circuit.cx(2,0)
+        circuit.barrier()
         Circuits.append(circuit)
         #ROUND 1
         circuit = QuantumCircuit(no_qubits)
         circuit.z(1)
+        circuit.barrier()
         Circuits.append(circuit)
         #ROUND 2
         circuit = QuantumCircuit(no_qubits)
         circuit.x(2)
+        circuit.z(0)
+        circuit.h(0)
+        circuit.barrier()
         Circuits.append(circuit)
         #ROUND 3
         circuit = QuantumCircuit(no_qubits)
         circuit.cx(0,2)
+        circuit.barrier()
         Circuits.append(circuit)
 
         Plays = [[('P0',2),('P1',0)],
@@ -141,7 +147,6 @@ def play_round(n_round,Plays,P0,P1):
 
 def get_played_game(Circuits, Plays, display_empty = False):
     final_circ = Circuits[0].copy()
-    print(final_circ.draw())
     for play, circ in zip(Plays, Circuits[1:]):
         for player, qubit in play:
             if player in ['P0','P1']:
