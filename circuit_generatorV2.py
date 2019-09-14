@@ -5,6 +5,7 @@ from qiskit.tools.visualization import circuit_drawer
 from qiskit.circuit import Gate
 from collections import Counter
 import math
+from PIL import Image
 
 def apply_gate(circuit,gate_str,applied,ctrl=0):
     if gate_str == 'H':
