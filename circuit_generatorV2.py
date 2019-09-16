@@ -167,9 +167,6 @@ def get_played_game(Circuits, Plays, display_empty = False):
         final_circ = final_circ + circ
     return final_circ
 
-
-
-
 def compute_state(partial_circ):
     backend = Aer.get_backend('statevector_simulator')
     job = execute(partial_circ, backend)
@@ -186,12 +183,12 @@ def score_counts(state_v):
 
 
 def state_draw(state):
-    dict = {}
+    state_dict = {}
     state = list(state)
-    tmp = int(math.log(len(state),2))
+    n_qubits = int(math.log(len(state),2))
     for i in range(len(state)):
-        dict[str(bin(i)[2:].zfill(tmp))] = 1000*np.abs(state[i])**2
-    plot_histogram(dict).savefig("state_prb.png")
+        state_dict[bin(i)[2:].zfill(n_qubits)[::-1]] = 1000*np.abs(state[i])**2
+    plot_histogram(state_dict).savefig("state_prb.png")
 
 def resize_img(title, basewidth):
     img = Image.open(title)
