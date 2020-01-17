@@ -21,5 +21,6 @@
   
   
   Presentation: https://docs.google.com/presentation/d/1lWjuPolNVO1WrVPw0jsXRKL_llOK1jNFixYHoQXWUPU/edit#slide=id.g60aaf8048b_3_1
-A similar game exists and fans of this may want to use it for a more formal introduction to quantum poker.
+
+A similar game exists and fans of this may want to use it for more gambling fun.
  https://github.com/sintefmath/QuantumPoker and https://arxiv.org/abs/1908.00044 
