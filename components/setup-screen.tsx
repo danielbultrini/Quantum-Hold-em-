@@ -3,8 +3,8 @@
 import { useState } from "react"
 
 export function SetupScreen({ onStart }: { onStart: (numQubits: number, numRounds: number) => void }) {
-  const [numQubits, setNumQubits] = useState(3)
-  const [numRounds, setNumRounds] = useState(3)
+  const [numQubits, setNumQubits] = useState(4)
+  const [numRounds, setNumRounds] = useState(4)
 
   return (
     <div className="mx-auto flex min-h-[70vh] max-w-xl flex-col items-center justify-center gap-8 py-10 text-center animate-in-fade">
@@ -25,7 +25,7 @@ export function SetupScreen({ onStart }: { onStart: (numQubits: number, numRound
           hint="Width of the circuit"
           value={numQubits}
           min={2}
-          max={4}
+          max={6}
           onChange={setNumQubits}
         />
         <div className="my-5 h-px bg-border" />
@@ -34,7 +34,7 @@ export function SetupScreen({ onStart }: { onStart: (numQubits: number, numRound
           hint="Turns each player takes"
           value={numRounds}
           min={2}
-          max={6}
+          max={8}
           onChange={setNumRounds}
         />
       </div>

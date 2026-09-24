@@ -51,19 +51,23 @@ function randomInt(n: number): number {
 
 // Build a random pre-populated layer of fixed gates (some qubits stay empty).
 function generateFixedLayer(numQubits: number, reserved: number[]): FixedGate[] {
-  const pool: (GateType | "Id")[] = ["H", "HZ", "X", "Z", "CX", "Id", "Id", "Id"]
+  // CX is weighted heavily so circuits are rich with entangling gates.
+  const pool: (GateType | "Id")[] = ["CX", "CX", "CX", "CX", "H", "HZ", "X", "Z", "Id"]
   const fixed: FixedGate[] = []
   // A qubit can hold at most one thing per layer, so track everything used.
   const occupied = new Set<number>(reserved)
-  for (let q = 0; q < numQubits; q++) {
+  // Visit qubits in random order so CX pairings aren't biased toward low indices.
+  const order = shuffle(Array.from({ length: numQubits }, (_, i) => i))
+  for (const q of order) {
     if (occupied.has(q)) continue
-    const choice = pool[randomInt(pool.length)]
+    const candidates: number[] = []
+    for (let c = 0; c < numQubits; c++) {
+      if (c !== q && !occupied.has(c)) candidates.push(c)
+    }
+    // Prefer a CX whenever there's a free partner; fall back to single-qubit gates.
+    const choice = candidates.length > 0 ? pool[randomInt(pool.length)] : pool[randomInt(pool.length - 1) + 4]
     if (choice === "Id") continue
     if (choice === "CX") {
-      const candidates: number[] = []
-      for (let c = 0; c < numQubits; c++) {
-        if (c !== q && !occupied.has(c)) candidates.push(c)
-      }
       if (candidates.length === 0) continue
       const control = candidates[randomInt(candidates.length)]
       fixed.push({ type: "CX", target: q, control })

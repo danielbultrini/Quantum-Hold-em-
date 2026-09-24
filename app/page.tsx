@@ -6,6 +6,7 @@ import { onesScore } from "@/lib/quantum"
 import { SetupScreen } from "@/components/setup-screen"
 import { CircuitBoard } from "@/components/circuit-board"
 import { TurnPanel } from "@/components/turn-panel"
+import { HandoffScreen } from "@/components/handoff-screen"
 import { ScoreMeter } from "@/components/score-meter"
 import { ProbabilityChart } from "@/components/probability-chart"
 import { WinnerOverlay } from "@/components/winner-overlay"
@@ -19,6 +20,8 @@ export default function Page() {
   const [currentRound, setCurrentRound] = useState(0)
   const [remaining0, setRemaining0] = useState<Record<string, number>>({})
   const [remaining1, setRemaining1] = useState<Record<string, number>>({})
+  // When set, the device is being passed — hide the hand until the named player is ready.
+  const [handoffTo, setHandoffTo] = useState<"p0" | "p1" | null>(null)
 
   function startGame(numQubits: number, numRounds: number) {
     const g = generateGame(numQubits, numRounds)
@@ -27,6 +30,7 @@ export default function Page() {
     setCurrentRound(0)
     setRemaining0({ ...g.hand0 })
     setRemaining1({ ...g.hand1 })
+    setHandoffTo("p0")
     setPhase("playing")
   }
 
@@ -54,6 +58,8 @@ export default function Page() {
     })
     if (activePlayer === "p0") {
       setRemaining0((r) => ({ ...r, [gate]: r[gate] - 1 }))
+      // Player 0 just moved — pass the device to Player 1.
+      setHandoffTo("p1")
     } else {
       setRemaining1((r) => ({ ...r, [gate]: r[gate] - 1 }))
     }
@@ -71,6 +77,8 @@ export default function Page() {
       next[currentRound] = { p0: null, p1: null }
       return next
     })
+    // Back to Player 0's turn for this layer.
+    setHandoffTo("p0")
   }
 
   function resolve() {
@@ -80,6 +88,8 @@ export default function Page() {
       setPhase("finished")
     } else {
       setCurrentRound((r) => r + 1)
+      // New layer starts with Player 0 — pass the device back.
+      setHandoffTo("p0")
     }
   }
 
@@ -139,7 +149,16 @@ export default function Page() {
               />
             </section>
 
-            {phase === "playing" && (
+            {phase === "playing" && handoffTo && (
+              <HandoffScreen
+                player={handoffTo}
+                round={currentRound}
+                numRounds={game.numRounds}
+                onReady={() => setHandoffTo(null)}
+              />
+            )}
+
+            {phase === "playing" && !handoffTo && (
               <TurnPanel
                 game={game}
                 currentRound={currentRound}
